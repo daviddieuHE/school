@@ -69,21 +69,26 @@ class school:
 
     @staticmethod
     def chope_name(id):
-        name_query = "SELECT name FROM students WHERE Id = %s"
         conn = school.start()
         cursor = conn.cursor()
-        name = cursor.execute(name_query, (id,))
-        print(name)
+        insert_tuple = (id)
+        name_query = """SELECT name from students WHERE Id = %s"""
+        try:
+            student = cursor.execute(name_query, (insert_tuple,))
+            rows = cursor.fetchall()
+            for row in rows:
+                school.delete_student(row[0], id)
+        except mysql.connector.Error as error:
+            print("le profil de l'étudiant n'a pas pu être supprimé : {}".format(error))
 
     @staticmethod
-    def delete_student(id):
-        name_query = "SELECT name FROM students WHERE Id = %s"
+    def delete_student(name,id):
         conn = school.start()
         cursor = conn.cursor()
         delete_tuple = (id)
         delete_query = "DELETE FROM students WHERE Id = %s"
+
         try:
-            name = list(cursor.execute(name_query, (delete_tuple,)))[0]
             delete = cursor.execute(delete_query, (delete_tuple,))
             conn.commit()
             print("{} a bien supprimé de la base de donnée !".format(name))
@@ -98,13 +103,13 @@ class school:
         command = {
             "help": "Affiche toute les commandes",
             "liste": "Liste des étudiants",
-            "nouveau étudiant": "Permet de créer une nouveau étudiant",
-            "supprimer étudiant": "Permet de supprimer un étudiant",
+            "nouvel étudiant": "Permet de créer une nouveau étudiant",
+            "supprimer profil": "Permet de supprimer un étudiant",
             "modifier étudiant": "Permet de modifier un étudiant existant",
             "quit": "Permet de quitter l'application"
         }
         for key, value in command.items():
-            print(key, '=>', value)
+            print(key, ' : ', value)
 
     @staticmethod
     def command():
@@ -127,7 +132,7 @@ class school:
 
             elif user_input == 'supprimer profil':
                 student_id = input("id de l'étudiant à supprimer : ")
-                school.delete_student(student_id)
+                school.chope_name(student_id)
 
             elif user_input == 'modifier profil':
                 up_id = input("id du profil à modifier : ")
