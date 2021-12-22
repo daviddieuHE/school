@@ -66,19 +66,27 @@ class school:
         except mysql.connector.Error as error:
             print("le profil de l'étudiant n'a pas pu être mis à jour : {}".format(error))
 
+
+    @staticmethod
+    def chope_name(id):
+        name_query = "SELECT name FROM students WHERE Id = %s"
+        conn = school.start()
+        cursor = conn.cursor()
+        name = cursor.execute(name_query, (id,))
+        print(name)
+
     @staticmethod
     def delete_student(id):
-        name_query = "SELECT 'name' FROM 'students' WHERE 'id' = %s"
-        name_id = str(id)
+        name_query = "SELECT name FROM students WHERE Id = %s"
         conn = school.start()
         cursor = conn.cursor()
         delete_tuple = (id)
         delete_query = "DELETE FROM students WHERE Id = %s"
         try:
-            name = cursor.execute(name_query, (name_id,))
+            name = list(cursor.execute(name_query, (delete_tuple,)))[0]
             delete = cursor.execute(delete_query, (delete_tuple,))
             conn.commit()
-            print("{} a bien supprimé de la base de donnée !".format("name"))
+            print("{} a bien supprimé de la base de donnée !".format(name))
         except mysql.connector.Error as error:
             print("Le profil d'étudiant n'a pas pu être supprimé : {}".format(error))
 
