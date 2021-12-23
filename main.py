@@ -1,7 +1,10 @@
-import school
+from school import school
 
 if __name__ == '__main__':
-    school.school.start()
-    school.school.command()
+
+        school.start()
+        school.intro()
+        school.list_command()
+        school.command()
 
 
